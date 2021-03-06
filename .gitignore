@@ -1,0 +1,7 @@
+/.idea/
+/music-tool.sln.DotSettings.user
+/music-player/obj/
+/deezer-client/obj/
+/console-client/obj/
+/deezer-client/bin/Debug/netcoreapp3.1/
+/music-player/bin/Debug/netcoreapp3.1/
