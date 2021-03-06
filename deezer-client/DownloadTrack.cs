@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -44,13 +45,6 @@ namespace deezer_client
 
         public static string GetUrl(Track track, string qualityKey)
         {
-            byte[] pythonLikeBytesOrd(string s)
-            {
-                var nums = s.Select(i => (int) i);
-                var bytes = nums.Select(i => (byte) i).ToArray();
-                return bytes;
-            }
-
             string hexdigest(byte[] hash)
             {
                 var sBuilder = new StringBuilder();
@@ -60,39 +54,39 @@ namespace deezer_client
                 return hex;
             }
 
-            const char magicChar = '¤';
-            var strings = new[] {track.MD5, qualityKey, track.Id, track.MediaVersion};
-            var step1 = string.Join(magicChar, strings);
+            qualityKey = "3";
+            
+            const char magic_char = '¤';
+            var step1 = String.Join(magic_char, new List<string> {track.MD5, qualityKey, track.Id, track.MediaVersion});
+
             string hashed;
             using (var md5 = MD5.Create())
             {
-                var nums = step1.Select(i => (int) i);
-                var bytes = nums.Select(i => (byte) i).ToArray();
+                var bytes = step1.Select(i => (byte) i).ToArray();
                 var hash = md5.ComputeHash(bytes);
                 hashed = hexdigest(hash);
             }
 
-            var step2 = $"{hashed}{magicChar}{step1}{magicChar}";
-            step2 = step2.PadRight(80, ' ');
-            string step3;
+            var step2 = hashed + magic_char + step1 + magic_char;
+            step2 = step2.PadLeft(80, ' ');
+            string hex;
             using (var aes = Aes.Create())
             {
                 const string key = "jo6aey6haid2Teih";
                 aes.Mode = CipherMode.ECB;
-                var keyBytes = pythonLikeBytesOrd(key);
+                var keyBytes = key.Select(i => (int) i).Select(i => (byte) i).ToArray();
                 aes.Key = keyBytes;
-                aes.Padding = PaddingMode.None;
+                //aes.Padding = PaddingMode.None;
                 using (var encryptor = aes.CreateEncryptor())
                 {
-                    var bytes = pythonLikeBytesOrd(step2);
+                    var bytes = step2.Select(i => (byte) i).ToArray();
                     var hash = encryptor.TransformFinalBlock(bytes, 0, bytes.Length);
-                    var hex = string.Concat(Array.ConvertAll(hash, x => x.ToString("x2")));
-                    step3 = hex;
+                    hex = string.Concat(Array.ConvertAll(hash, x => x.ToString("x2")));
                 }
             }
-
+            
             var cdn = track.MD5[0];
-            var url = $"https://e-cdns-proxy-{cdn}.dzcdn.net/mobile/1/{step3}";
+            var url = $"https://e-cdns-proxy-{cdn}.dzcdn.net/mobile/1/{hex}";
             return url;
         }
     }
