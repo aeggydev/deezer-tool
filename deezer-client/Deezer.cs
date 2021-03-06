@@ -11,9 +11,9 @@ namespace deezer_client
 {
     public partial class Deezer
     {
+        private readonly string token;
         public HttpClient client = new HttpClient();
         public string cookies;
-        private readonly string token;
         public Uri uri = new Uri("https://www.deezer.com");
 
         private Deezer(string cookies, string token)

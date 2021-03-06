@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -45,29 +44,28 @@ namespace deezer_client
 
         public static string GetUrl(Track track, string qualityKey)
         {
-            string hexdigest(byte[] hash)
+            string Hexdigest(byte[] hash)
             {
                 var sBuilder = new StringBuilder();
                 foreach (var b in hash) sBuilder.Append(b.ToString("x2"));
 
-                var hex = sBuilder.ToString();
-                return hex;
+                return sBuilder.ToString();
             }
 
             qualityKey = "3";
-            
-            const char magic_char = '¤';
-            var step1 = String.Join(magic_char, new List<string> {track.MD5, qualityKey, track.Id, track.MediaVersion});
+
+            const char magicChar = '¤';
+            var step1 = string.Join(magicChar, new List<string> {track.MD5, qualityKey, track.Id, track.MediaVersion});
 
             string hashed;
             using (var md5 = MD5.Create())
             {
                 var bytes = step1.Select(i => (byte) i).ToArray();
                 var hash = md5.ComputeHash(bytes);
-                hashed = hexdigest(hash);
+                hashed = Hexdigest(hash);
             }
 
-            var step2 = hashed + magic_char + step1 + magic_char;
+            var step2 = hashed + magicChar + step1 + magicChar;
             step2 = step2.PadLeft(80, ' ');
             string hex;
             using (var aes = Aes.Create())
@@ -84,7 +82,7 @@ namespace deezer_client
                     hex = string.Concat(Array.ConvertAll(hash, x => x.ToString("x2")));
                 }
             }
-            
+
             var cdn = track.MD5[0];
             var url = $"https://e-cdns-proxy-{cdn}.dzcdn.net/mobile/1/{hex}";
             return url;
