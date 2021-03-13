@@ -61,7 +61,6 @@ namespace deezer_client
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Console.WriteLine($"\"{Title}\" downloading...");
             await GetTracks();
             var tasks = tracks.Select(async track =>
                 {

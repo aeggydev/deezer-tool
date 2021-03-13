@@ -45,6 +45,26 @@ namespace deezer_client
 
             return resultJson;
         }
+        public async Task<string> ApiCallMethodRaw(string method, string content)
+        {
+            // TODO: Add error handling
+            const string apiurl = "https://www.deezer.com/ajax/gw-light.php";
+
+            var builder = new UriBuilder(apiurl);
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            query["api_version"] = "1.0";
+            query["api_token"] = token;
+            query["input"] = "3";
+            query["method"] = method;
+            builder.Query = query.ToString();
+            var url = builder.ToString();
+            var res = await client.PostAsync(url, new StringContent(content));
+            var resString = await res.Content.ReadAsStringAsync();
+            var resultJson = JObject.Parse(resString).SelectToken("$.results")?.ToString();
+
+            return resultJson;
+        }
+
 
         public async Task<string> LegacyApiCallMethod(string method, Dictionary<string, string> parameters,
             bool isArray)

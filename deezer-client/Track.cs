@@ -49,7 +49,16 @@ namespace deezer_client
         {
             var data = new {SNG_ID = id};
             var json = await user.ApiCallMethod(MethodName, data);
-            var track = JsonConvert.DeserializeObject<Track>(json);
+            var track = JsonConvert.DeserializeObject<Track>(json,
+                new JsonSerializerSettings
+                {
+                    // TODO: Find a better way to solve this
+                    Error = (sender, args) =>
+                    {
+                        Console.WriteLine($"ERROR: {args.ErrorContext.Error.Message}");
+                        args.ErrorContext.Handled = true;
+                    }
+                });
             track.user = user;
             return track;
         }
