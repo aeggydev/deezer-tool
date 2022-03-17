@@ -52,7 +52,8 @@ internal static class TrackDownloadHelpers
             return sBuilder.ToString();
         }
 
-        qualityKey = "3";
+        // Quality keys at https://github.com/acgonzales/pydeezer/blob/e894b2a14d13bc33d83bb71d75d0f6302357b5d8/pydeezer/constants/track_formats.py
+        qualityKey = "1";
 
         const char magicChar = '¤';
         var step1 = string.Join(magicChar, new List<string> {track.MD5, qualityKey, track.Id, track.MediaVersion});

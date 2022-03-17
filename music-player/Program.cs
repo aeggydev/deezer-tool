@@ -17,10 +17,10 @@ namespace music_player
             var user = await Deezer.Login(arl);
 
             var userData = await user.MyFavorites();
-            var albums = userData.Favorites.Albums.Data;
+            var albums = userData.Favorites.Albums.Data.Take(1);
             var musicDir = "home folder here";
             var i = 1;
-            var max = albums.Count;
+            var max = 1;
             Console.WriteLine();
             albums.Reverse();
             foreach (var album in albums)

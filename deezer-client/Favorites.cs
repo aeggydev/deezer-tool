@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -36,7 +37,9 @@ public partial class Deezer
     {
         var sendData = "{\"checksums\":null}";
         var json = await ApiCallMethodRaw("user.getAllFeedbacks", sendData);
-        File.WriteAllText("/home/aeggy/RiderProjects/deezer-tool/music-player/lol.json", json);
+        //File.WriteAllText("/home/aeggy/RiderProjects/deezer-tool/music-player/lol.json", json);
+        var path = Path.Combine(Environment.CurrentDirectory, "lol.json");
+        File.WriteAllText(path, json);
 
         var data = JsonConvert.DeserializeObject<allFeedbacksResult>(json);
         return data;
