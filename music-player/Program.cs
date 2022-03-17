@@ -7,6 +7,11 @@ using deezer_client;
 var stopwatch = new Stopwatch();
 stopwatch.Start();
 var arl = Environment.GetEnvironmentVariable("arl");
+if (arl is null)
+{
+    Console.WriteLine("arl not specified as environment variable");
+    Environment.Exit(1);
+}
 var user = await Deezer.Login(arl);
 
 var userData = await user.MyFavorites();
