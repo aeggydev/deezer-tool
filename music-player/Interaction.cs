@@ -17,7 +17,7 @@ public class Interaction
         var albums = await Search.SearchAlbums(query, User);
         foreach (var album in albums)
         {
-            Console.WriteLine($"{album.Title} - by {album.ArtistName}");
+            Console.WriteLine($"{album.Title} - by {album.ArtistName}, ID: {album.Id}");
         }
     }
     public async Task SearchTracks(string query)
@@ -27,5 +27,19 @@ public class Interaction
         {
             Console.WriteLine($"{track.Title} - by {track.ArtistName}, album: {track.AlbumTitle}, ID: {track.Id}");
         }
+    }
+
+    public async Task DownloadTrack(string id)
+    {
+        var track = await Track.Get(id, User);
+        await track.DownloadToDir(new(Environment.CurrentDirectory), Namers.ArtistTrackTitleNamer);
+        Console.WriteLine($"\"{track.ArtistName} - {track.Title}\" downloaded");
+    }
+
+    public async Task DownloadAlbum(string id)
+    {
+        var album = await Album.Get(id, User);
+        await album.DownloadToDir(new(Environment.CurrentDirectory), Namers.ArtistTrackTitleNamer);
+        Console.WriteLine($"\"{album.ArtistName} - {album.Title}\" downloaded");
     }
 }

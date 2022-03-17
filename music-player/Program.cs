@@ -47,12 +47,22 @@ app.Command("download", c =>
         ca.HelpOption();
         var album = ca.Argument("album", "Name / ID of the album to download");
         album.IsRequired(false, "You have to specify a name / ID");
+        ca.OnExecute(() =>
+        {
+            var task = new Interaction(user).DownloadAlbum(album.Value!);
+            task.GetAwaiter().GetResult();
+        });
     });
     c.Command("track", ct =>
     {
         ct.HelpOption();
-        var track = ct.Argument("track", "Name / ID of the track to download");
-        track.IsRequired(false, "You have to specify a name / ID");
+        var track = ct.Argument("track", "ID of the track to download");
+        track.IsRequired(false, "You have to specify an ID");
+        ct.OnExecute(() =>
+        {
+            var task = new Interaction(user).DownloadTrack(track.Value!);
+            task.GetAwaiter().GetResult();
+        });
     });
     c.Option("-o|--output <FILENAME>", "Specifies where to place the file", CommandOptionType.SingleOrNoValue);
     Util.NoCommandToHelp(c);
