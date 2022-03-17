@@ -1,12 +1,11 @@
-﻿namespace deezer_client
-{
-    public interface IApiMethod
-    {
-    }
+﻿namespace deezer_client;
 
-    public record Dimensions
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
+public interface IApiMethod
+{
+}
+
+public record Dimensions
+{
+    public int X { get; set; }
+    public int Y { get; set; }
 }

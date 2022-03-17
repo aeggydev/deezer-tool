@@ -1,17 +1,16 @@
-﻿namespace deezer_client
-{
-    //GET_USER_DATA = "deezer.getUserData"
-    /*
-    PAGE_TRACK = "deezer.pageTrack"
-    SONG_GET_LIST_DATA = "song.getListData"
-    SONG_LYRICS = "song.getLyrics"
+﻿namespace deezer_client;
 
-    ALBUM_TRACKS = "song.getListByAlbum"
+//GET_USER_DATA = "deezer.getUserData"
+/*
+PAGE_TRACK = "deezer.pageTrack"
+SONG_GET_LIST_DATA = "song.getListData"
+SONG_LYRICS = "song.getLyrics"
 
-    ARTIST_DISCOGRAPHY = "album.getDiscography"
-    ARTIST_TOP_TRACKS = "artist.getTopTrack"
+ALBUM_TRACKS = "song.getListByAlbum"
 
-    PAGE_PLAYLIST = "deezer.pagePlaylist"
-    PLAYLIST_TRACKS = "playlist.getSongs"
-    */
-}
+ARTIST_DISCOGRAPHY = "album.getDiscography"
+ARTIST_TOP_TRACKS = "artist.getTopTrack"
+
+PAGE_PLAYLIST = "deezer.pagePlaylist"
+PLAYLIST_TRACKS = "playlist.getSongs"
+*/
