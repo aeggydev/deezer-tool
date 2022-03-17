@@ -1,2 +1,2 @@
-# Deprecated
-The vulnerability that allowed this has been patched.
+# deezer-tool
+This tool allows you to download music from deezer.com from the command line.
