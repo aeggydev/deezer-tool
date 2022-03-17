@@ -2,7 +2,6 @@
 {
     public interface IApiMethod
     {
-        public static string MethodName { get; }
     }
 
     public record Dimensions
