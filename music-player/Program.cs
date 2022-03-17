@@ -6,8 +6,38 @@ using deezer_client;
 using McMaster.Extensions.CommandLineUtils;
 using music_player;
 
+var config = new Configuration();
 var app = new CommandLineApplication();
+
+/*
+if (config.Arl == "" || config.Arl is null)
+{
+    Console.WriteLine("Arl not specified. Please specify one with the 'set' subcommand");
+    Environment.Exit(1);
+}
+*/
+var user = await Deezer.Login(config.Arl!);
+
 app.HelpOption();
+app.Command("set", c =>
+{
+    c.HelpOption();
+    c.Description = "Set a setting";
+    c.Command("arl", ca =>
+    {
+        // TODO: Tell the user how to get it
+        ca.Description = "Set your arl";
+        var arlArg = ca.Argument("arl", "Your Deezer account's arl");
+        arlArg.IsRequired(false, "You have to specify the arl");
+        ca.OnExecute(() =>
+        {
+            // TODO: Add validation of the arl
+            config.Arl = arlArg.Value;
+            config.Update();
+        });
+    });
+    Util.NoCommandToHelp(c);
+});
 app.Command("download", c =>
 {
     c.HelpOption();
@@ -37,13 +67,23 @@ app.Command("search", c =>
         var album = ca.Argument("album", "Name of the album to search for");
         album.IsRequired(false, "You have to specify a name");
         ca.HelpOption();
+        ca.OnExecute(() =>
+        {
+            var task = new Interaction(user).SearchAlbums(album.Value!);
+            task.GetAwaiter().GetResult();
+        });
     });
     c.Command("track", ct =>
     {
         ct.Description = "Search for an artist";
-        var artist = ct.Argument("track", "Name of the track to search");
-        artist.IsRequired(false, "You have to specify a name");
+        var track = ct.Argument("track", "Name of the track to search");
+        track.IsRequired(false, "You have to specify a name");
         ct.HelpOption();
+        ct.OnExecute(() =>
+        {
+            var task = new Interaction(user).SearchTracks(track.Value!);
+            task.GetAwaiter().GetResult();
+        });
     });
     Util.NoCommandToHelp(c);
 });
@@ -53,13 +93,12 @@ Environment.Exit(1);
 
 var stopwatch = new Stopwatch();
 stopwatch.Start();
-var arl = Environment.GetEnvironmentVariable("arl");
-if (arl is null)
-{
-    Console.WriteLine("arl not specified as environment variable");
-    Environment.Exit(1);
-}
-var user = await Deezer.Login(arl);
+//var arl = Environment.GetEnvironmentVariable("arl");
+// if (arl is null)
+// {
+//     Console.WriteLine("arl not specified as environment variable");
+//     Environment.Exit(1);
+// }
 
 var userData = await user.MyFavorites();
 var albums = userData.Favorites.Albums.Data.Take(1);
