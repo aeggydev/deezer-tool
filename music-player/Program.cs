@@ -31,7 +31,12 @@ app.Command("set", c =>
         arlArg.IsRequired(false, "You have to specify the arl");
         ca.OnExecute(() =>
         {
-            // TODO: Add validation of the arl
+            if (arlArg.Value!.Length != 192)
+            {
+                // TODO: Actually check with the deezer servers
+                Console.WriteLine("ERROR: You haven't entered an actual deezer arl");
+                Environment.Exit(1);
+            }
             config.Arl = arlArg.Value;
             config.Update();
         });
